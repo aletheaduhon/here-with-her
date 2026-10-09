@@ -18,7 +18,7 @@
 const SITE = {
   // 1. SITE SETTINGS ------------------------------------------------------
   // Your real address, no trailing slash. Used for link-preview tags only.
-  siteUrl: "https://herewithher.example",
+  siteUrl: "https://here-with-her.vercel.app",
 
   // The first language is the default and lives at the site root (/partner).
   // Others live in a folder (/es/partner). To add one, copy the whole
