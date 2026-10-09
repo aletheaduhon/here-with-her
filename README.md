@@ -28,16 +28,16 @@ Never edit the `.html` files by hand. Edit `content.js`, then run:
 
 ```bash
 npm install            # first time only (installs `sharp` for preview images)
-npm run build          # writes pages + preview images
+npm run generate          # writes pages + preview images
 ```
 
-To rebuild pages only, without the image step: `npm run build:pages`.
+To rebuild pages only, without the image step: `npm run generate:pages`.
 
 Then commit everything that changed, including the generated files.
 
 ## Before you launch: set your address
 
-In `content.js`, change `siteUrl` near the top to your real address (no trailing slash), for example `https://herewithher.org`. Link previews need a full address, so this matters. Run `npm run build` and commit.
+In `content.js`, change `siteUrl` near the top to your real address (no trailing slash), for example `https://herewithher.org`. Link previews need a full address, so this matters. Run `npm run generate` and commit.
 
 ## Preview on your computer
 
@@ -63,7 +63,7 @@ git push -u origin main
 ## Deploy on Vercel
 
 1. In Vercel choose **Add New... > Project** and import the GitHub repo.
-2. Framework Preset: **Other**. Leave Build Command and Output Directory **empty**. Root Directory stays `./`.
+2. Framework Preset: **Other**. `vercel.json` already tells Vercel there is nothing to build; leave the Build Command and Output Directory settings alone. Root Directory stays `./`.
 3. Click **Deploy**. Every push to `main` goes live automatically.
 
 ## Connect a custom domain
@@ -80,7 +80,7 @@ Don't push straight to `main`. Make a branch instead:
 ```bash
 git checkout -b edit-partner-page
 # edit content.js, then:
-npm run build
+npm run generate
 git add . && git commit -m "Edit partner page"
 git push -u origin edit-partner-page
 ```
@@ -103,7 +103,7 @@ Example: a page for grandparents.
    - `meta`: `title`, `description`, and the preview-image text (`imageHeadline`, `imageSub`).
    - `hero`, `notice`, `helps`, `doesnt`, `say`, `notSay`, and `forHer`: the page text. Every audience needs all of these.
    - Optional: `extraSections` (blocks between the intro and "what they might notice") and `extraSectionsAfter` (blocks after "things you can say"). Delete them if you don't need them.
-4. Run `npm run build`. You'll get `grandparents.html` and `assets/og/grandparents.png`, and the picker tile appears on the home page and in every page's "Not who you were looking for?" list.
+4. Run `npm run generate`. You'll get `grandparents.html` and `assets/og/grandparents.png`, and the picker tile appears on the home page and in every page's "Not who you were looking for?" list.
 5. Commit and push. No other file needs to change.
 
 Only `/kids` uses the optional `story` and `grownUpNote` fields.
@@ -124,7 +124,7 @@ In `content.js`, find `quiz: { questions: [ ... ] }`. Each question looks like t
 - **Add:** copy a block, paste it into the list, and change it.
 - **Remove:** delete the whole `{ ... },` block.
 
-The quiz counts its questions automatically, so the progress text and score update on their own. The messages shown with the score are in `scoreMessages`. Each has a `min` score; if you change the number of questions, adjust those numbers. Run `npm run build`, then commit.
+The quiz counts its questions automatically, so the progress text and score update on their own. The messages shown with the score are in `scoreMessages`. Each has a `min` score; if you change the number of questions, adjust those numbers. Run `npm run generate`, then commit.
 
 ## 3. Update the link preview text and image for a page
 
@@ -139,9 +139,9 @@ meta: {
 }
 ```
 
-Change the text, run `npm run build`, and the page tags and `assets/og/<slug>.png` are both rewritten. Commit and push.
+Change the text, run `npm run generate`, and the page tags and `assets/og/<slug>.png` are both rewritten. Commit and push.
 
-**To use your own picture instead:** make a 1200x630 PNG, save it as `assets/og/<slug>.png` (the home page is `home.png`), and rebuild with `npm run build:pages`, which doesn't regenerate images. Don't run the full `npm run build` afterward, or it will replace your picture.
+**To use your own picture instead:** make a 1200x630 PNG, save it as `assets/og/<slug>.png` (the home page is `home.png`), and rebuild with `npm run generate:pages`, which doesn't regenerate images. Don't run the full `npm run generate` afterward, or it will replace your picture.
 
 **Previews are cached.** Messaging apps remember the old preview for a while. To refresh, test with a fresh link (add `?v=2` to the end), or use the Facebook Sharing Debugger.
 
