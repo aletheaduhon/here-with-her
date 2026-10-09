@@ -114,7 +114,7 @@ function header(c, lang, slug) {
   return `<body>
 <a class="skip-link" href="#main">${esc(c.ui.skipToContent)}</a>
 <header class="site-header">
-  <div class="wrap wrap--wide">
+  <div class="wrap${slug ? "" : " wrap--wide"}">
     <a class="brand" href="${pagePath(lang, "")}">${logo}<span>${esc(c.ui.siteName)}</span></a>
     <div class="header-tools">${switcher}</div>
   </div>
