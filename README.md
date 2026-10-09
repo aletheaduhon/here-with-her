@@ -15,7 +15,8 @@ assets/styles.css     the one shared stylesheet (includes dark mode and print)
 assets/app.js         the one shared script (copy/share, quiz, story pager)
 assets/fonts/         self-hosted Young Serif and Atkinson Hyperlegible
 assets/og/            link-preview images (one per page, generated)
-index.html, partner.html, teen.html, kids.html, family.html, work.html   generated pages
+*.html (index, partner, teen, kids, ...)   generated pages
+sitemap.xml, robots.txt                     generated for search engines
 favicon.svg, favicon-32.png, apple-touch-icon.png                          icons
 vercel.json           turns on clean URLs (/partner instead of /partner.html)
 ```
@@ -149,13 +150,22 @@ The preview image uses Georgia unless Young Serif is installed on the machine ru
 
 ---
 
+## The two tool pages
+
+Besides the audience pages there are two others, both in the `tools` block of `content.js`:
+
+- `/today` ("How I'm feeling today"): feeling buttons that fill in a short message, and three finish-the-sentence boxes. Edit the `states` (the buttons) and `builder` (the sentence starters) lists.
+- `/quiz`: the same quiz as the home page, on its own address with its own preview image, so it can be sent as a link.
+
+The home page's "Common signs" card and the "talk to a doctor" note are in `home.symptoms` and `ui.doctorBody`. Add `symptomCard: true` to any audience to show the signs card on that page too (the partner page does).
+
 ## Translating later
 
 Everything visible is in `content.js` under `CONTENT.en`. To add a language, copy the whole `en: { ... }` block, rename it (for example `es`), translate the text, and add the name to `languageNames` in the `SITE` block. The generator then writes `/es/...` pages, adds `hreflang` tags, and shows a language picker in the header. With only one language, no picker appears. Text inside images isn't used on the site itself, so nothing needs redrawing. Preview images are generated per language.
 
 ## Printing
 
-Every audience page prints as a one-page handout (use the browser's Print, or save as PDF). Printing leaves out the story, the "For her" box, the quiz, and the buttons.
+Every audience page prints as a one-page handout (use the browser's Print, or save as PDF). Printing leaves out the story, the "For her" box, the quiz, the buttons, and the doctor and symptom cards. To leave a block of your own off the printout, add `skipInPrint: true` to it. When you add long text to a page, print-preview it to make sure it still fits on one sheet.
 
 ## Accessibility notes
 

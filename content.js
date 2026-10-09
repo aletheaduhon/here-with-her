@@ -70,7 +70,7 @@ const CONTENT = {
       grownUpHeading: "A note for the grown-up reading this",
 
       quizHeading: "How well does your family get it?",
-      quizIntro: "Six quick true-or-false questions. There’s no wrong way to learn.",
+      quizIntro: "{total} quick true-or-false questions. There’s no wrong way to learn.",
       quizNeedsJs: "The quiz needs JavaScript turned on. Everything else on this site works without it.",
       quizTrue: "True",
       quizFalse: "False",
@@ -84,6 +84,28 @@ const CONTENT = {
 
       pickerHeading: "Who are you to her?",
       pickerIntro: "Pick the one that fits. Each page is written just for that person.",
+
+      doctorHeading: "When it’s time to talk to a doctor",
+      doctorBody:
+        "Perimenopause is normal, but that doesn’t mean she has to put up with it. If symptoms get in the way of her sleep, work, mood, or relationships, a doctor can talk through what’s going on and what choices she has. Other health problems can look like perimenopause, so checking in is worthwhile. If something feels urgent or unsafe, call your local emergency number.",
+
+      shareSiteHeading: "Know someone who needs this?",
+      shareSiteButton: "Share this site",
+      shareSiteMessage: "Here With Her explains perimenopause to the people around her:",
+      shareSiteCopied: "Link copied.",
+      footerToday: "Say how I feel today",
+      footerQuiz: "Family quiz",
+
+      todayStatesHeading: "How I’m feeling today",
+      todayStatesIntro: "Tap the one that fits. It fills in your message below, and you can change it.",
+      todayBuilderHeading: "In my own words",
+      todayBuilderIntro:
+        "Finish any of these sentences. Skip the ones you don’t want. Then add them to your message.",
+      todayBuilderAdd: "Add to my message",
+      todayAdded: "Added to your message.",
+      todayNothing: "Type something in at least one box first.",
+      todayMessageHeading: "Your message",
+      toolsHeading: "Quick tools",
     },
 
     // 3. HOME PAGE --------------------------------------------------------
@@ -120,6 +142,29 @@ const CONTENT = {
           },
         ],
       },
+      symptoms: {
+        heading: "Common signs of perimenopause",
+        intro: "Every woman’s mix is different. Having some of these doesn’t mean anything on its own. It’s a way to put words to what she may be feeling.",
+        items: [
+          "Periods that change: shorter, longer, heavier, lighter, or skipped",
+          "Hot flashes",
+          "Night sweats",
+          "Trouble sleeping",
+          "Feeling worn out",
+          "Mood changes or a short fuse",
+          "Anxiety or feeling low",
+          "Brain fog or lost words",
+          "Aches in joints or muscles",
+          "Changes in interest in sex",
+        ],
+        note: "A general list, not a diagnosis. A doctor can help her figure out what’s behind any of it.",
+      },
+      tools: {
+        cards: [
+          { slug: "today", label: "Say how I feel today", blurb: "A quick message she can send in seconds" },
+          { slug: "quiz", label: "The family quiz", blurb: "Send it to see how well your family gets it" },
+        ],
+      },
     },
 
     // 4. QUIZ -------------------------------------------------------------
@@ -129,9 +174,9 @@ const CONTENT = {
       scoreMessages: [
         // Shown by score. `min` is the lowest score for that message.
         { min: 0, text: "Everyone starts somewhere. Read a page or two and try again." },
-        { min: 3, text: "A good start. You’re already ahead of most people." },
-        { min: 5, text: "Nice work. You really get it." },
-        { min: 6, text: "Perfect score. She’s lucky to have you." },
+        { min: 4, text: "A good start. You’re already ahead of most people." },
+        { min: 8, text: "Nice work. You really get it." },
+        { min: 10, text: "Perfect score. She’s lucky to have you." },
       ],
       questions: [
         {
@@ -170,6 +215,30 @@ const CONTENT = {
           explanation:
             "Fixing and “calm down” tend to make things worse. Listening, asking what would help, and doing a little more around the house work better. A doctor is the right person for questions about treatment.",
         },
+        {
+          statement: "Menopause and perimenopause mean the same thing.",
+          answer: false,
+          explanation:
+            "Perimenopause is the run-up, the years of changing hormones. Menopause is a single point: 12 months in a row with no period.",
+        },
+        {
+          statement: "Poor sleep can make other symptoms feel worse.",
+          answer: true,
+          explanation:
+            "When you’re short on sleep, everything is harder: mood, memory, patience, and energy. That’s why night sweats and bad nights matter so much.",
+        },
+        {
+          statement: "Every woman has the same symptoms in perimenopause.",
+          answer: false,
+          explanation:
+            "Some women barely notice it. Others have a long list. Her experience may be very different from her mom’s, her friend’s, or what you’ve read.",
+        },
+        {
+          statement: "She could feel better if she just tried harder.",
+          answer: false,
+          explanation:
+            "These changes are physical, and willpower doesn’t switch them off. Understanding and practical help work better. A doctor can talk with her about choices.",
+        },
       ],
     },
 
@@ -187,6 +256,7 @@ const CONTENT = {
     //   notSay        the screenshot-ready card
     //   extraSections OPTIONAL extra blocks, shown between the intro and "notice"
     //   extraSectionsAfter  OPTIONAL extra blocks, shown after "things to say"
+    //                 (add skipInPrint: true to a block to leave it off the printout)
     //   story         OPTIONAL read-together story (used on /kids)
     //   grownUpNote   OPTIONAL note shown with the story
     //   forHer        suggested opener + editable message
@@ -194,6 +264,7 @@ const CONTENT = {
       // ---------------------------------------------------------------- PARTNER
       {
         slug: "partner",
+        symptomCard: true,
         picker: { label: "Her partner", blurb: "What’s happening and how to be on her side" },
         meta: {
           title: "For her partner | Here With Her",
@@ -211,6 +282,7 @@ const CONTENT = {
         extraSections: [
           {
             heading: "What’s happening in her body",
+            skipInPrint: true, // leaves this block out of the one-page printout
             paragraphs: [
               "Two hormones, estrogen and progesterone, help run her cycle. They also touch sleep, mood, body temperature, and memory.",
               "In perimenopause, those hormones stop following a steady pattern. They spike, dip, and surprise her. That’s why she can feel fine on Monday and rough on Tuesday, with no clear reason.",
@@ -571,7 +643,315 @@ const CONTENT = {
             "Hi. I’m sharing a short page about perimenopause, which I’m experiencing. It may affect my energy or focus on some days, and a few small adjustments would help. I’d be glad to talk it through whenever suits you. I’d appreciate you keeping this between us.",
         },
       },
+      // ---------------------------------------------------------- GRANDPARENTS
+      {
+        slug: "grandparents",
+        picker: { label: "Older relatives", blurb: "Her parents, aunts, and grandparents" },
+        meta: {
+          title: "For older relatives | Here With Her",
+          description:
+            "A gentle, respectful page for parents, aunts, and grandparents about what perimenopause is and how to support her.",
+          imageHeadline: "For older relatives",
+          imageSub: "A gentle guide to what she’s going through",
+        },
+        hero: {
+          kicker: "For parents, aunts, and grandparents",
+          title: "A newer way of talking about what she’s going through",
+          intro:
+            "She sent you this because she wants you close, not because anything is wrong with her. Many women of earlier generations went through this quietly, with little information. Today we talk about it more, and it helps to have family in her corner.",
+        },
+        extraSections: [
+          {
+            heading: "What’s different now",
+            paragraphs: [
+              "Doctors and researchers know much more than they used to. Women are also more willing to say out loud what they’re feeling. If you went through it yourself, your own experience may have been very different from hers, and that’s okay.",
+            ],
+          },
+        ],
+        notice: {
+          items: [
+            "She may be more tired than you’re used to seeing her",
+            "She may feel hot when others are cold",
+            "She may be more emotional, or quicker to snap, and then feel bad about it",
+            "She may forget things or lose her words",
+            "She may cancel visits when she’s worn out",
+          ],
+        },
+        helps: [
+          "Listening first, without comparing",
+          "Saying “thank you for telling me”",
+          "Keeping visits easy, and meeting her where she is",
+          "Offering a hand with the kids or the house",
+          "Letting her lead how much she shares",
+        ],
+        doesnt: [
+          "“Back in my day we just got on with it”",
+          "Comparing her to how you handled it",
+          "Telling her it’s all in her head",
+          "Passing her story on to other relatives",
+        ],
+        say: [
+          "“Thank you for telling me. How can I help?”",
+          "“That sounds really hard.”",
+          "“I’m proud of you for looking into this.”",
+          "“Come over whenever you’re up to it. No pressure.”",
+        ],
+        notSay: {
+          quote: "“I went through it and I was fine.”",
+          instead: "“It sounds like it’s been hard. I’m here if you want to talk.”",
+        },
+        forHer: {
+          opener:
+            "“There’s something I’d like to share with you about what I’ve been going through. I’d love for you to understand.”",
+          message:
+            "Hi. I wanted to share something with you. I’m in perimenopause, which is the time before menopause. It’s the reason I’ve been more tired lately. This page explains it simply. I’d love for you to read it, and then we can talk if you’d like.",
+        },
+      },
+
+      // ---------------------------------------------------------------- FRIEND
+      {
+        slug: "friend",
+        picker: { label: "A close friend or sister", blurb: "Be the one she can be real with" },
+        meta: {
+          title: "For a close friend or sister | Here With Her",
+          description:
+            "How to be the friend or sister she can be honest with while she goes through perimenopause.",
+          imageHeadline: "For a close friend or sister",
+          imageSub: "Be the one she can be real with",
+        },
+        hero: {
+          kicker: "For a close friend or sister",
+          title: "She chose you because you’re safe",
+          intro:
+            "Out of everyone she knows, she picked you to tell. Perimenopause can feel lonely, because many women don’t talk about it. Having one person who gets it makes a big difference.",
+        },
+        notice: {
+          items: [
+            "She seems more tired or quieter than usual",
+            "She’s a bit more up and down",
+            "She jokes about it, then goes quiet",
+            "She says she feels like she’s “losing it,” or doesn’t feel like herself",
+            "She’s relieved when someone just listens",
+          ],
+        },
+        helps: [
+          "Being a safe place: no advice unless she asks",
+          "Checking in with a simple text",
+          "Doing something low-key together, like a walk or coffee",
+          "Sharing your own experience only if she wants to hear it",
+          "Keeping what she tells you private",
+        ],
+        doesnt: [
+          "Trying to top her story with yours",
+          "Diagnosing her or telling her what to take",
+          "Joking along when she isn’t laughing",
+          "Telling mutual friends",
+        ],
+        say: [
+          "“That sounds exhausting. Do you want to vent or want ideas?”",
+          "“You’re not losing it. You’re going through something real.”",
+          "“Want company on a walk?”",
+          "“I’ve got you, no matter what.”",
+        ],
+        notSay: {
+          quote: "“Oh, everyone goes through that. You’ll be fine.”",
+          instead: "“That sounds really hard. Tell me more.”",
+        },
+        forHer: {
+          opener:
+            "“Can I tell you something I haven’t told many people? I’ve been going through some changes, and I trust you.”",
+          message:
+            "Hey you. I haven’t told many people this, but I’m in perimenopause. It’s been a lot. This page explains it better than I can. Could you read it? I just want someone in my corner.",
+        },
+      },
+
+      // --------------------------------------------------------------- MANAGER
+      {
+        slug: "manager",
+        picker: { label: "Her manager or HR", blurb: "Support, privacy, and simple adjustments" },
+        meta: {
+          title: "For managers and HR | Here With Her",
+          description:
+            "A short guide for managers and HR on supporting an employee going through perimenopause, with respect for privacy.",
+          imageHeadline: "For managers and HR",
+          imageSub: "Supporting an employee through perimenopause",
+        },
+        hero: {
+          kicker: "For managers and HR",
+          title: "Supporting an employee through perimenopause",
+          intro:
+            "An employee has chosen to tell you she is in perimenopause, the transition before menopause. It is common in women in their 40s and early 50s. With a little flexibility, most people keep doing their best work.",
+        },
+        notice: {
+          heading: "What may show up",
+          items: [
+            "Tiredness or trouble concentrating after poor sleep",
+            "Needing a cooler space, or a few minutes out of a meeting",
+            "Needing breaks at unpredictable times",
+            "Occasional stress, or lost words, in high-pressure moments",
+          ],
+        },
+        extraSectionsAfter: [
+          {
+            heading: "Practical steps you can take",
+            paragraphs: [
+              "Start by asking her what would help. Her answer matters more than any list. Rules and rights differ by country and employer, so check your company’s policies, and talk with HR if you’re not sure.",
+            ],
+            items: [
+              "Keep the conversation private, and agree together who else needs to know, if anyone",
+              "Offer flexibility in start times or place of work, where the job allows",
+              "Make it easy to step out for a few minutes",
+              "Look at the workspace: temperature, airflow, a nearby window",
+              "Share agendas and notes ahead of meetings",
+              "Check in later, and adjust if needed",
+            ],
+          },
+        ],
+        helps: [
+          "Thanking her for telling you",
+          "Keeping what she shares confidential",
+          "Judging the work, not a hard day",
+          "Making support simple and quiet",
+        ],
+        doesnt: [
+          "Asking for medical details she hasn’t offered",
+          "Telling her team without her OK",
+          "Jokes about age or hormones",
+          "Quietly passing her over for opportunities",
+        ],
+        say: [
+          "“Thank you for telling me. What would help?”",
+          "“This stays between us.”",
+          "“Let’s look at what we can adjust for a while.”",
+          "“Let me know if anything changes.”",
+        ],
+        notSay: {
+          quote: "“Are you sure you can handle this project right now?”",
+          instead: "“What would make this project work for you?”",
+        },
+        forHer: {
+          opener:
+            "“I’d like to share something so you have the full picture, and ask for a couple of small adjustments. Do you have 15 minutes this week?”",
+          message:
+            "Hi. I’d like to talk with you about some health changes I’m going through. I’m in perimenopause, and some days it affects my sleep and focus. This page explains it briefly. A couple of small adjustments would help, and I’d appreciate you keeping this confidential. When would be a good time to talk?",
+        },
+      },
+
+      // -------------------------------------------------------- ADULT CHILDREN
+      {
+        slug: "adult-children",
+        picker: { label: "Her grown kids", blurb: "For adult children of a woman in perimenopause" },
+        meta: {
+          title: "For grown children | Here With Her",
+          description:
+            "A page for adult sons and daughters about what their mom may be going through in perimenopause, and how to help.",
+          imageHeadline: "For grown children",
+          imageSub: "What your mom may be going through",
+        },
+        hero: {
+          kicker: "For grown children",
+          title: "Your mom is going through a big change",
+          intro:
+            "You may have noticed she’s tired, moody, or forgetful. It’s easy to chalk it up to age or stress. For many women in their 40s and 50s, it’s perimenopause, the years before menopause. Knowing that can change how you show up for her.",
+        },
+        notice: {
+          items: [
+            "She seems more worn out or less like herself",
+            "She’s quick to cry, or quick to snap",
+            "She forgets things or repeats herself",
+            "She cancels or leaves early",
+            "She brings up health, or avoids the topic",
+          ],
+        },
+        helps: [
+          "Asking how she’s really doing, and listening",
+          "Taking something off her plate",
+          "Being patient when she forgets or repeats",
+          "Offering to go to appointments, if she wants you there",
+          "Calling just to talk",
+        ],
+        doesnt: [
+          "Telling her she’s overreacting",
+          "Treating it like a joke",
+          "Assuming she’s just getting old",
+          "Taking her moods personally",
+        ],
+        say: [
+          "“Mom, how are you really doing?”",
+          "“I read about this. Is that what you’ve been feeling?”",
+          "“Can I take something off your plate this week?”",
+          "“I’m here for you, and I’m not going anywhere.”",
+        ],
+        notSay: {
+          quote: "“You’re being dramatic, Mom.”",
+          instead: "“That sounds like a lot. What would help?”",
+        },
+        forHer: {
+          opener:
+            "“I wanted to explain why I’ve been different lately. It isn’t about you.”",
+          message:
+            "Hi sweetheart. I wanted to share something with you. I’m in perimenopause, which is why I’ve been more tired and up and down. This page explains it. It would mean a lot if you read it. I love you.",
+        },
+      },
     ],
+
+
+    // 6. TOOL PAGES ------------------------------------------------------
+    // Two pages that aren’t audience pages: /today (quick messages) and /quiz.
+    tools: {
+      today: {
+        slug: "today",
+        meta: {
+          title: "How I’m feeling today | Here With Her",
+          description:
+            "A quick way to tell the people around her how today is going, with a message she can edit and send.",
+          imageHeadline: "How I’m feeling today",
+          imageSub: "A quick message you can send in seconds",
+        },
+        hero: {
+          kicker: "A quick tool",
+          title: "Say how today is going, in seconds",
+          intro:
+            "On some days, explaining is too much. Pick how you feel, change the words if you like, and send it. Nothing you type here is saved.",
+        },
+        states: [
+          { label: "Rough night of sleep", message: "Rough night, and I’m running on empty today. Please go easy on me. There’s nothing to fix. I’ll be better soon." },
+          { label: "Hot and foggy", message: "It’s a hot flash and foggy-brain kind of day. If I lose my words or open all the windows, that’s perimenopause, not you." },
+          { label: "Low energy", message: "Low energy today. I might need to skip plans or leave early. It’s not about you, and I’d love to try again soon." },
+          { label: "On edge", message: "I’m feeling on edge today. If I snap, it’s my hormones, not you. I’ll be okay, and I may need a little space." },
+          { label: "Need some help", message: "Today I could really use some help. Could you take care of dinner or the kids tonight? Thank you for being on my team." },
+          { label: "Doing okay", message: "Good day today. Thank you for being patient on the harder ones. It means a lot." },
+        ],
+        builder: [
+          { label: "What’s hardest lately", starter: "The hardest part lately is", placeholder: "sleeping through the night" },
+          { label: "What I wish people knew", starter: "What I wish people knew is", placeholder: "it isn’t about them" },
+          { label: "What helps me", starter: "What helps me is", placeholder: "a quiet evening and a cool room" },
+        ],
+        defaultMessage: "Hi. Here’s how I’m doing today:",
+      },
+      quiz: {
+        slug: "quiz",
+        meta: {
+          title: "How well does your family get it? | Here With Her",
+          description:
+            "A quick true-or-false quiz about perimenopause. Take it, then send it to your family.",
+          imageHeadline: "How well does your family get it?",
+          imageSub: "A quick true-or-false quiz",
+        },
+        hero: {
+          kicker: "A quick quiz",
+          title: "How well does your family get it?",
+          intro:
+            "Take the quiz, and then send it to the people around you. It’s a gentle way to start the conversation.",
+        },
+        forHer: {
+          opener:
+            "“I found this quiz about what I’ve been going through. Want to see how you do?”",
+          message:
+            "Hi. I found a short quiz about perimenopause, which is what I’ve been going through. It takes about two minutes. Could you try it and tell me what you think?",
+        },
+      },
+    },
   },
 };
 

@@ -121,9 +121,21 @@ function header(c, lang, slug) {
 </header>`;
 }
 
-function footer(c) {
+function footer(c, lang) {
+  const u = c.ui;
   return `<footer class="site-footer">
   <div class="wrap">
+    <div class="share-site" data-share-site data-url="${SITE.siteUrl + pagePath(lang, "")}"
+      data-message="${esc(u.shareSiteMessage)}" data-copied="${esc(u.shareSiteCopied)}">
+      <p class="share-site-title">${esc(u.shareSiteHeading)}</p>
+      <button type="button" class="btn btn--ghost" data-share-site-btn>${esc(u.shareSiteButton)}</button>
+      <span class="status" role="status" data-share-site-status></span>
+    </div>
+    <nav class="footer-links" aria-label="Site">
+      <a href="${pagePath(lang, "")}">${esc(u.homeLink)}</a>
+      <a href="${pagePath(lang, "today")}">${esc(u.footerToday)}</a>
+      <a href="${pagePath(lang, "quiz")}">${esc(u.footerQuiz)}</a>
+    </nav>
     <p>${esc(c.ui.footerNote)}</p>
     <p>${esc(c.ui.footerPrivacy)}</p>
   </div>
@@ -140,7 +152,7 @@ const list = (items, cls) =>
 function extra(sections) {
   return (sections || [])
     .map(
-      (s) => `<section>
+      (s) => `<section${s.skipInPrint ? ' class="no-print"' : ""}>
   <h2>${esc(s.heading)}</h2>
   ${(s.paragraphs || []).map((p) => `<p>${esc(p)}</p>`).join("")}
   ${s.items ? list(s.items, "dots") : ""}
@@ -161,7 +173,47 @@ function pickerHtml(c, lang, exclude) {
     .join("")}</ul>`;
 }
 
-function quizHtml(c) {
+function symptomCard(c) {
+  const s = c.home.symptoms;
+  return `<section class="symptoms">
+  <div class="not-say symptom-card">
+    <h2>${esc(s.heading)}</h2>
+    <p class="intro">${esc(s.intro)}</p>
+    <ul>${s.items.map((i) => `<li>${esc(i)}</li>`).join("")}</ul>
+    <p class="instead">${esc(s.note)}</p>
+    <p class="mark">${esc(c.ui.siteName)}</p>
+  </div>
+</section>`;
+}
+
+const doctorPanel = (c) =>
+  `<section class="panel doctor"><h2>${esc(c.ui.doctorHeading)}</h2><p>${esc(c.ui.doctorBody)}</p></section>`;
+
+function forHerBox(c, lang, path, forHer, o = {}) {
+  const u = c.ui;
+  return `<section class="for-her" data-for-her data-path="${path}"
+      data-copied="${esc(u.copiedMessage)}" data-copy-failed="${esc(u.copyFailed)}">
+      <h2>${esc(o.heading || u.forHerLabel)}</h2>
+      ${"intro" in o ? (o.intro ? `<p>${esc(o.intro)}</p>` : "") : `<p>${esc(u.forHerIntro)}</p>`}
+      ${
+        forHer.opener
+          ? `<p class="field-label">${esc(u.openerLabel)}</p><p class="opener">${esc(forHer.opener)}</p>`
+          : ""
+      }
+      <label for="message">${esc(u.messageLabel)}</label>
+      <textarea id="message" rows="6">${esc(forHer.message)}</textarea>
+      <p class="page-link"><span class="sr-only">${esc(u.pageLinkLabel)}: </span><span data-link>${esc(
+    SITE.siteUrl + path
+  )}</span></p>
+      <div class="actions">
+        <button type="button" class="btn" data-copy>${esc(u.copyButton)}</button>
+        <button type="button" class="btn btn--ghost" data-share hidden>${esc(u.shareButton)}</button>
+      </div>
+      <p class="status" role="status" data-status></p>
+    </section>`;
+}
+
+function quizHtml(c, opts = {}) {
   const u = c.ui;
   const qs = c.quiz.questions.map((q) => ({
     statement: q.statement,
@@ -172,8 +224,8 @@ function quizHtml(c) {
   data-progress="${esc(u.quizQuestionOf)}" data-correct="${esc(u.quizCorrect)}"
   data-incorrect="${esc(u.quizIncorrect)}" data-next="${esc(u.quizNext)}"
   data-see-score="${esc(u.quizSeeScore)}" data-score-template="${esc(u.quizScore)}">
-  <h2>${esc(u.quizHeading)}</h2>
-  <p>${esc(u.quizIntro)}</p>
+  ${opts.noHeading ? "" : `<h2>${esc(u.quizHeading)}</h2>`}
+  <p>${esc(fill(u.quizIntro, { total: qs.length }))}</p>
   <p class="no-js-note">${esc(u.quizNeedsJs)}</p>
   <div class="js-only">
     <div data-q-question>
@@ -223,16 +275,31 @@ ${header(c, lang, "")}
         .join("")}</div>
     </section>
 
+    ${symptomCard(c)}
+    ${doctorPanel(c)}
+
     <section class="picker-section" id="picker">
       <h2>${esc(c.ui.pickerHeading)}</h2>
       <p>${esc(c.ui.pickerIntro)}</p>
       ${pickerHtml(c, lang)}
     </section>
 
+    <section>
+      <h2>${esc(c.ui.toolsHeading)}</h2>
+      <ul class="picker">${h.tools.cards
+        .map(
+          (t) =>
+            `<li><a href="${pagePath(lang, t.slug)}"><span class="label">${esc(t.label)}</span><small>${esc(
+              t.blurb
+            )}</small></a></li>`
+        )
+        .join("")}</ul>
+    </section>
+
     ${quizHtml(c)}
   </div>
 </main>
-${footer(c)}`;
+${footer(c, lang)}`;
 }
 
 function storyHtml(c, a) {
@@ -309,23 +376,10 @@ ${header(c, lang, a.slug)}
 
     ${extra(a.extraSectionsAfter)}
 
-    <section class="for-her" data-for-her data-path="${p}"
-      data-copied="${esc(u.copiedMessage)}" data-copy-failed="${esc(u.copyFailed)}">
-      <h2>${esc(u.forHerLabel)}</h2>
-      <p>${esc(u.forHerIntro)}</p>
-      <p class="field-label">${esc(u.openerLabel)}</p>
-      <p class="opener">${esc(a.forHer.opener)}</p>
-      <label for="message">${esc(u.messageLabel)}</label>
-      <textarea id="message" rows="6">${esc(a.forHer.message)}</textarea>
-      <p class="page-link"><span class="sr-only">${esc(u.pageLinkLabel)}: </span><span data-link>${esc(
-    SITE.siteUrl + p
-  )}</span></p>
-      <div class="actions">
-        <button type="button" class="btn" data-copy>${esc(u.copyButton)}</button>
-        <button type="button" class="btn btn--ghost" data-share hidden>${esc(u.shareButton)}</button>
-      </div>
-      <p class="status" role="status" data-status></p>
-    </section>
+    ${a.symptomCard ? symptomCard(c) : ""}
+    ${doctorPanel(c)}
+
+    ${forHerBox(c, lang, p, a.forHer)}
 
     <section class="read-next">
       <h2>${esc(u.readNextHeading)}</h2>
@@ -334,7 +388,73 @@ ${header(c, lang, a.slug)}
     </section>
   </div>
 </main>
-${footer(c)}`;
+${footer(c, lang)}`;
+}
+
+function todayPage(c, lang) {
+  const t = c.tools.today;
+  const u = c.ui;
+  const p = pagePath(lang, t.slug);
+  return `${head(c, lang, t.slug, t.meta)}
+${header(c, lang, t.slug)}
+<main id="main">
+  <div class="wrap">
+    <a class="back-link" href="${pagePath(lang, "")}">${"\u2190"} ${esc(u.homeLink)}</a>
+    <section class="hero">
+      <span class="kicker">${esc(t.hero.kicker)}</span>
+      <h1>${esc(t.hero.title)}</h1>
+      <p class="lede">${esc(t.hero.intro)}</p>
+    </section>
+
+    <section>
+      <h2>${esc(u.todayStatesHeading)}</h2>
+      <p>${esc(u.todayStatesIntro)}</p>
+      <div class="chips">${t.states
+        .map(
+          (s) =>
+            `<button type="button" class="chip" data-state data-message="${esc(s.message)}">${esc(s.label)}</button>`
+        )
+        .join("")}</div>
+    </section>
+
+    <section class="panel builder" data-builder data-added="${esc(u.todayAdded)}" data-nothing="${esc(u.todayNothing)}">
+      <h2>${esc(u.todayBuilderHeading)}</h2>
+      <p>${esc(u.todayBuilderIntro)}</p>
+      ${t.builder
+        .map(
+          (b, i) => `<label for="b${i}">${esc(b.label)}</label>
+      <div class="starter" aria-hidden="true">${esc(b.starter)}\u2026</div>
+      <input id="b${i}" type="text" data-starter="${esc(b.starter)}" placeholder="${esc(b.placeholder)}">`
+        )
+        .join("\n      ")}
+      <button type="button" class="btn btn--gold" data-builder-add>${esc(u.todayBuilderAdd)}</button>
+      <p class="status" role="status" data-builder-status></p>
+    </section>
+
+    ${forHerBox(c, lang, p, { message: t.defaultMessage }, { heading: u.todayMessageHeading, intro: "" })}
+  </div>
+</main>
+${footer(c, lang)}`;
+}
+
+function quizPage(c, lang) {
+  const t = c.tools.quiz;
+  const p = pagePath(lang, t.slug);
+  return `${head(c, lang, t.slug, t.meta)}
+${header(c, lang, t.slug)}
+<main id="main">
+  <div class="wrap">
+    <a class="back-link" href="${pagePath(lang, "")}">${"\u2190"} ${esc(c.ui.homeLink)}</a>
+    <section class="hero">
+      <span class="kicker">${esc(t.hero.kicker)}</span>
+      <h1>${esc(t.hero.title)}</h1>
+      <p class="lede">${esc(t.hero.intro)}</p>
+    </section>
+    ${quizHtml(c, { noHeading: true })}
+    ${forHerBox(c, lang, p, t.forHer, { heading: c.ui.forHerLabel })}
+  </div>
+</main>
+${footer(c, lang)}`;
 }
 
 /* ---------- link-preview images and icons (need `sharp`) ---------- */
@@ -389,7 +509,11 @@ async function makeImages() {
   let n = 0;
   for (const lang of langs) {
     const c = CONTENT[lang];
-    const jobs = [{ slug: "", meta: c.home.meta }, ...c.audiences.map((a) => ({ slug: a.slug, meta: a.meta }))];
+    const jobs = [
+      { slug: "", meta: c.home.meta },
+      ...c.audiences.map((a) => ({ slug: a.slug, meta: a.meta })),
+      ...Object.values(c.tools).map((t) => ({ slug: t.slug, meta: t.meta })),
+    ];
     for (const j of jobs) {
       await sharp(Buffer.from(ogSvg(c, j.meta)))
         .png({ compressionLevel: 9 })
@@ -419,7 +543,25 @@ async function makeImages() {
       write(fileFor(lang, a.slug), audiencePage(c, lang, a));
       pages++;
     }
+    write(fileFor(lang, c.tools.today.slug), todayPage(c, lang));
+    write(fileFor(lang, c.tools.quiz.slug), quizPage(c, lang));
+    pages += 2;
   }
+  // sitemap and robots
+  const urls = [];
+  for (const lang of langs) {
+    const c = CONTENT[lang];
+    ["", ...c.audiences.map((a) => a.slug), ...Object.values(c.tools).map((t) => t.slug)].forEach((s) =>
+      urls.push(SITE.siteUrl + pagePath(lang, s))
+    );
+  }
+  write(
+    path.join(ROOT, "sitemap.xml"),
+    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls
+      .map((u) => `  <url><loc>${u}</loc></url>`)
+      .join("\n")}\n</urlset>\n`
+  );
+  write(path.join(ROOT, "robots.txt"), `User-agent: *\nAllow: /\n\nSitemap: ${SITE.siteUrl}/sitemap.xml\n`);
   console.log(`Wrote ${pages} pages.`);
   if (!SKIP_IMAGES) await makeImages();
 })();

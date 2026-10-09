@@ -175,4 +175,67 @@
     els.score.setAttribute("tabindex", "-1");
     render();
   }
+
+  /* ---------- Quick-message page: feeling chips and sentence builder ---------- */
+  var chips = document.querySelectorAll("[data-state]");
+  var msgBox = document.querySelector("[data-for-her] textarea");
+  if (chips.length && msgBox) {
+    chips.forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        msgBox.value = chip.getAttribute("data-message");
+        chips.forEach(function (c) { c.setAttribute("aria-pressed", c === chip ? "true" : "false"); });
+        var st = document.querySelector("[data-for-her] [data-status]");
+        if (st) st.textContent = "";
+        msgBox.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+      chip.setAttribute("aria-pressed", "false");
+    });
+  }
+  var builder = document.querySelector("[data-builder]");
+  if (builder && msgBox) {
+    var bStatus = builder.querySelector("[data-builder-status]");
+    builder.querySelector("[data-builder-add]").addEventListener("click", function () {
+      var lines = [];
+      builder.querySelectorAll("input[data-starter]").forEach(function (inp) {
+        var v = inp.value.trim().replace(/[.!?]+$/, "");
+        if (v) lines.push(inp.getAttribute("data-starter") + " " + v + ".");
+      });
+      if (!lines.length) { bStatus.textContent = builder.getAttribute("data-nothing"); return; }
+      var cur = msgBox.value.trim();
+      msgBox.value = (cur ? cur + "\n\n" : "") + lines.join(" ");
+      bStatus.textContent = builder.getAttribute("data-added");
+    });
+  }
+
+  /* ---------- Footer: share the whole site ---------- */
+  var site = document.querySelector("[data-share-site]");
+  if (site) {
+    var sUrl = location.origin + new URL(site.getAttribute("data-url")).pathname;
+    var sMsg = site.getAttribute("data-message");
+    var sStatus = site.querySelector("[data-share-site-status]");
+    site.querySelector("[data-share-site-btn]").addEventListener("click", function () {
+      if (navigator.share) {
+        navigator.share({ text: sMsg, url: sUrl }).catch(function () {});
+        return;
+      }
+      var text = sMsg + " " + sUrl;
+      var ok = function () { sStatus.textContent = site.getAttribute("data-copied"); };
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(ok, function () { legacyCopy(text) && ok(); });
+      } else if (legacyCopy(text)) ok();
+    });
+  }
+  function legacyCopy(text) {
+    var tmp = document.createElement("textarea");
+    tmp.value = text;
+    tmp.setAttribute("readonly", "");
+    tmp.style.position = "fixed";
+    tmp.style.opacity = "0";
+    document.body.appendChild(tmp);
+    tmp.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    document.body.removeChild(tmp);
+    return ok;
+  }
 })();
