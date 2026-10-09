@@ -273,6 +273,7 @@ function audiencePage(c, lang, a) {
 ${header(c, lang, a.slug)}
 <main id="main">
   <div class="wrap">
+    <a class="back-link" href="${pagePath(lang, "")}#picker"><span aria-hidden="true">\u2190</span> ${esc(u.backLink)}</a>
     <section class="hero">
       <span class="kicker">${esc(a.hero.kicker)}</span>
       <h1>${esc(a.hero.title)}</h1>

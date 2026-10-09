@@ -177,6 +177,22 @@ section { margin-block: 2.25rem; }
   color: var(--ink);
 }
 
+/* ---------- back link ---------- */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 48px;
+  padding: 0 1.1rem;
+  border-radius: 999px;
+  border: 2px solid var(--accent);
+  background: var(--card);
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+.back-link:hover { background: var(--accent); color: var(--on-accent); }
+
 /* ---------- hero ---------- */
 .hero { margin-top: 0.5rem; padding-block: 1rem 0.5rem; max-width: var(--measure); }
 .quiz { max-width: var(--measure); }
@@ -516,6 +532,7 @@ section { margin-block: 2.25rem; }
   .picker-section,
   .quiz,
   .skip-link,
+  .back-link,
   .no-print { display: none !important; }
   .site-header { padding-block: 0 4pt; }
   main { padding-block: 0; }

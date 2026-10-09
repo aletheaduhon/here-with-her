@@ -35,6 +35,7 @@ const CONTENT = {
       tagline: "Helping the people around her understand perimenopause",
       skipToContent: "Skip to content",
       homeLink: "Home",
+      backLink: "Back to all pages",
       languageLabel: "Language",
       printButton: "Print this page",
       footerNote:
