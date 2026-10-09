@@ -1,0 +1,14 @@
+{
+  "name": "here-with-her",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static site that helps women explain perimenopause to the people around them.",
+  "scripts": {
+    "build": "node scripts/generate.js",
+    "build:pages": "node scripts/generate.js --skip-images",
+    "preview": "npx --yes serve ."
+  },
+  "devDependencies": {
+    "sharp": "^0.33.5"
+  }
+}
